@@ -1,0 +1,36 @@
+# Use uma imagem base do Node.js
+FROM node:14 as builder
+
+# Defina o diretório de trabalho
+WORKDIR /app
+
+# Copie os arquivos necessários
+COPY package*.json ./
+
+# Instale as dependências
+RUN npm install
+
+# Copie os arquivos restantes
+COPY . .
+
+# Construa a aplicação Next.js
+RUN npm run build
+
+# Use uma imagem mais leve do Node.js para a execução
+FROM node:14-alpine
+
+# Defina o diretório de trabalho para a execução
+WORKDIR /app
+
+# Copie apenas os arquivos necessários da imagem de construção
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
+
+# Exponha a porta
+EXPOSE 3000
+
+# Comando para iniciar o servidor Next.js
+CMD ["npm", "start"]
+

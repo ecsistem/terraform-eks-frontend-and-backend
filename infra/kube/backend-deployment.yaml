@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: sua-imagem-backend:latest
+        ports:
+        - containerPort: 4000
+        env:
+        - name: POSTGRES_HOST
+          value: postgres
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_DB
+          value: seu-banco-de-dados
+        - name: POSTGRES_USER
+          value: seu-usuario
+        - name: POSTGRES_PASSWORD
+          value: sua-senha

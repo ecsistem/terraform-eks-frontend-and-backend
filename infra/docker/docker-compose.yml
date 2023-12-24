@@ -1,0 +1,38 @@
+# Edson Costa - 2023
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./caminho/para/frontend
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./caminho/para/backend
+      dockerfile: Dockerfile.backend
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+
+  postgres:
+    image: sua-imagem-postgres:latest
+    environment:
+      POSTGRES_USER: seu-usuario
+      POSTGRES_PASSWORD: sua-senha
+      POSTGRES_DB: seu-banco-de-dados
+    ports:
+      - "5432:5432"
+    networks:
+      - my-network
